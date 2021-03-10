@@ -10,7 +10,7 @@ Some of the videos are NSFW.
 
 ## Usage
 
-Click here to visit the GitHub hosted page.
+[Click here](https://rmp135.github.io/blackspinearchive/) to visit the GitHub hosted page. Disable any autoplay addons to remove the video title for the full experience.
 
 ## Running
 
