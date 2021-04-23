@@ -8,22 +8,72 @@
 </head>
 <style>
   body {
-    margin: 0px;
+    background: black;
   }
-  iframe {
+  video {
     height: 100vh;
+    width: 100%;
+  }
+  body {
+    margin: 0px;
+    overflow: hidden;
+  }
+  .hidden {
+    display: none;
+  }
+  #title-container {
+    top: 0;
+    right: 0;
+    margin-right: 10px;
+    position: absolute;
+    opacity: 0;
+  }
+  #title-container:hover {
+    opacity: 1;
+  }
+  #title-container a {
+    color: gray;
+    text-decoration: none;
   }
 </style>
 <body>
-  <iframe src="" width="100%" height="100%" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+  <video id="static" src="static.mp4" autoplay="true" loop="true" muted="true"></video>
+  <video class="hidden" id="player" src="" autoplay="true"></video>
+  <div id="title-container"><a target="_blank" href=""></a></div>
 </body>
 <script>
   ;(async () => {
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      refreshVideo()
+    })
+
     const response = await fetch('links.txt')
     const text = await response.text()
+    const videoEl = document.querySelector('#player')
+    const staticEl = document.querySelector('#static')
     const videos = text.split('\n')
-    const index = Math.floor(Math.random() * (videos.length + 1))
-    document.querySelector('iframe').src = `https://archive.org/embed/${videos[index]}&autoplay=1`
+    
+    videoEl.onloadstart = () => {
+      staticEl.classList = []
+      videoEl.classList = ["hidden"]
+    } 
+    videoEl.onloadeddata = () => {
+      staticEl.classList = ["hidden"]
+      videoEl.classList = []
+    } 
+    videoEl.onerror = () => refreshVideo()
+    videoEl.onended = () => refreshVideo()
+
+    refreshVideo()
+    
+    function refreshVideo () {
+      const index = Math.floor(Math.random() * (videos.length + 1))
+      const title = videos[index]
+      const titleEl = document.querySelector('#title-container a')
+      titleEl.textContent = title
+      titleEl.href = `https://archive.org/details/${title}`
+      videoEl.src = `https://archive.org/download/${title}/format=h.264`
+    }
   })()
 </script>
 </html>
