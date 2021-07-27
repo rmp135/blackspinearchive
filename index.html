@@ -43,15 +43,16 @@
 </body>
 <script>
   ;(async () => {
-    navigator.mediaSession.setActionHandler('nexttrack', () => {
+    navigator.mediaSession.setActionHandler("nexttrack", () => {
       refreshVideo()
     })
 
-    const response = await fetch('links.txt')
+    const response = await fetch("links.txt")
     const text = await response.text()
-    const videoEl = document.querySelector('#player')
-    const staticEl = document.querySelector('#static')
-    const videos = text.split('\n')
+    const videos = text.split("\n").filter(s => s != "").map(JSON.parse).map(a => a.identifier)
+    
+    const videoEl = document.querySelector("#player")
+    const staticEl = document.querySelector("#static")
     
     videoEl.onloadstart = () => {
       staticEl.classList = []
@@ -61,15 +62,16 @@
       staticEl.classList = ["hidden"]
       videoEl.classList = []
     } 
-    videoEl.onerror = () => refreshVideo()
-    videoEl.onended = () => refreshVideo()
+    videoEl.onerror = refreshVideo
+    videoEl.onended = refreshVideo
+    videoEl.onclick = refreshVideo
 
     refreshVideo()
     
     function refreshVideo () {
       const index = Math.floor(Math.random() * (videos.length + 1))
       const title = videos[index]
-      const titleEl = document.querySelector('#title-container a')
+      const titleEl = document.querySelector("#title-container a")
       titleEl.textContent = title
       titleEl.href = `https://archive.org/details/${title}`
       videoEl.src = `https://archive.org/download/${title}/format=h.264`

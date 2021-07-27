@@ -27,11 +27,5 @@ To refresh the list of available videos we need the [Internet Archive CLI](https
 ```
 curl -LOs https://archive.org/download/ia-pex/ia
 chmod +x ia
-./ia search vhsvault > raw.txt
-```
-
-Then filter out everything but the name. Included is a quick python script that will override the existings links.txt file.
-
-```
-python parse.py
+./ia search vhsvault > links.txt
 ```
